@@ -17,7 +17,7 @@ $(NAME):	$(OBJS)
 			$(CC) -o $@ $^ $(CFLAGS) $(LIB) -I$(HEADER) $(READ) $(NAME)
 
 clean:
-			$(RM) $(LIB) srcs/*.o
+			$(RM) $(LIB) srcs/*.o lbft/*.o
 
 fclean:		clean
 			$(RM) $(NAME)
