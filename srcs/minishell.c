@@ -12,7 +12,7 @@
 
 #include "../include/minishell.h"
 
-char *PATH = NULL;
+char *path = NULL;
 
 char	*rl_gets(void)
 {
@@ -232,6 +232,8 @@ char **putenv_in_tab(t_list *alst)
 		tab = malloc(sizeof(char *) * len_list(alst) + 1);
 		while (list)
 		{
+				if (ft_strcmp(list->key ,"PATH") == 0)
+					path = ft_strcpy(list->content, path);
 				tab[i] = ft_strjoin(list->key, "=");
 				tab[i] = ft_strjoin(tab[i], list->content);
 				i++;
@@ -806,8 +808,10 @@ int main(int ac, char **av, char **envp)
 		char *line;
 		//int pid = getpid();
 		t_list *alst;
+		char **tab_env;
 		alst = NULL;
 		insert_env(envp, &alst);
+		tab_env = putenv_in_tab(alst);
 		t_parse *parse;
 		while (1)
 		{
@@ -817,7 +821,7 @@ int main(int ac, char **av, char **envp)
 				parse = malloc(sizeof(t_parse));
 				init_parse(parse);
 				parse = parser_arg(parse, line);
-				my_exec(parse, av, envp, line);
+				my_exec(parse, av, tab_env, line);
 				print_arg(parse);
 				free(parse);
 				/*if (execve(ft_strjoin("/bin/", av[0]), av, envp) == -1)
