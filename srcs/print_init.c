@@ -2,13 +2,13 @@
 
 void print_list(t_list **alst)
 {
-        t_list *new;
-        new = *alst;
-        while (new)
-        {
-                printf("%s = %s \n", new->key, new->content);
-                new = new->next;
-        }
+    t_list *new;
+    new = *alst;
+    while (new)
+    {
+        printf("%s = %s \n", new->key, new->content);
+        new = new->next;
+    }
 }
 
 void	print_arg(t_parse *parse)
@@ -41,11 +41,11 @@ void	print_arg(t_parse *parse)
 
 void init_parse(t_parse *parse)
 {
-        parse->cmd = NULL;
-        parse->arg = NULL;
-        parse->dir = NULL;
-        parse->flag = NULL;
-        parse->pipe = 0;
-        parse->next = NULL;
-        parse->nbr_arg = 0;
+    parse->cmd = NULL;
+    parse->arg = NULL;
+    parse->dir = NULL;
+    parse->flag = NULL;
+    parse->pipe = 0;
+    parse->next = NULL;
+    parse->nbr_arg = 0;
 }

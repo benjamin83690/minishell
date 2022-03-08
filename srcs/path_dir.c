@@ -87,10 +87,9 @@ void	change_dir(char *path, t_list *alst)
                 if (chdir((const char *)new_path) == -1)
                 {
                         printf("cd: %s: No such file or directory\n",
-                                        ft_substr(path, 3, ft_strlen(path)));
+                        ft_substr(path, 3, ft_strlen(path)));
                 }
                 else
                         update_env(alst, new_path);
         }
-
 }

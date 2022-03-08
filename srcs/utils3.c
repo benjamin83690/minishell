@@ -27,9 +27,7 @@ char **select_av(char *line)
 {
     char **new_av;
     new_av = ft_split(line, ' ');
-	
     return (new_av);
-
 }
 
 int search_pipe(char *line)
@@ -49,11 +47,11 @@ int search_pipe(char *line)
 
 void	free_tab(char **tab)
 {
-        int	i;
+    int	i;
 
-        i = 0;
-        while (tab[i])
-        {
-                free(tab[i]);
-        }
+    i = 0;
+    while (tab[i])
+    {
+        free(tab[i]);
+    }
 }
