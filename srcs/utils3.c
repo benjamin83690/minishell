@@ -16,13 +16,6 @@ int	count_redirection(char *line)
     return (size);
 }
 
-int	is_alpha(char c)
-{
-    if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
-        return (1);
-    return (0);
-}
-
 char **select_av(char *line)
 {
     char **new_av;
