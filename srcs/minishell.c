@@ -48,7 +48,6 @@ t_parse	*parser_arg(t_parse *parse, char *line)
 				cmd = NULL;
 				i = 0;
 				start = 0;
-				//printf("line =====> [%s]\n", line);
 			}
 			else if (line[i] == '-')
 			{
@@ -65,10 +64,8 @@ t_parse	*parser_arg(t_parse *parse, char *line)
 			{
 				if (last_elem(parse)->pipe == 1 || last_elem(parse)-> cmd == NULL)
 				{
-					//printf("line =====> [%s]\n", line);
 					len = count_letter(line, start);
 					cmd = ft_substr(line, start, len);
-					//printf("cmd =====> [%s]\n", cmd);
 				}
 				else
 				{
@@ -79,7 +76,6 @@ t_parse	*parser_arg(t_parse *parse, char *line)
 				}
 				parse = insert_arg(parse, cmd);
 			}
-			//printf("cmd ====> [%s]\n", cmd);
 			while (line[i] && line[i] != ' ')
 				i++;
 		}
@@ -89,40 +85,38 @@ t_parse	*parser_arg(t_parse *parse, char *line)
 			start = i;
 		}
 	}
-	//print_arg(parse);
 	return (parse);
 }
 
-void	my_exec(t_parse *parse, char **av, char **envp, char *line)
+void	my_exec(t_parse *parse, char **envp, t_list *alst)
 {
 	int         pid;
-	int status;
-	int           pipe_fd[2];
-	int           pipe_fd1[2];
+	int			status;
+	int         pipe_fd[2];
+	int         pipe_fd1[2];
 	t_parse *elem;
 	elem = parse;
+	char *argv[] = {check_path_access(alst, parse->cmd), parse->flag ,NULL};
+
 	
+	/*
 	if (pipe(pipe_fd) == -1)
 		perror("pipe");
 	if ((pid = fork()) == -1)
 		perror("fork");
 	else if (pid == 0)
 	{
-		char *this_av;
-		this_av = ft_substr(line, 0, search_pipe(line));
-		av = select_av(this_av);
 		close(pipe_fd[0]);
 		if (dup2(pipe_fd[1], 1) == -1)
 			perror("dup2");
-		else if (execve(ft_strjoin("/bin/", elem->cmd), av, envp) == -1)
+		//argv = { check_path_access(alst, elem->cmd), parse->flag, NULL };
+		else if (execve(check_path_access(alst,parse->cmd), argv, envp) == -1)
 			perror("execve");
 	}
 	else
 	{
 		char      buffer[1024];
 		int       ret;
-		line = ft_substr(line, search_pipe(line) + 1, ft_strlen(line));
-		av = select_av(line);
 		close(pipe_fd[1]);
 		pipe(pipe_fd1);
 		pid = fork();
@@ -136,7 +130,8 @@ void	my_exec(t_parse *parse, char **av, char **envp, char *line)
 
 			dup2(pipe_fd1[1], 1);
 			close(pipe_fd1[1]);
-			if (execve(ft_strjoin("/usr/bin/", elem->cmd), av, envp) == -1)
+			//argv = {check_path_access(alst, elem->cmd), parse->flag, NULL}; 
+			if (execve(check_path_access(alst,parse->cmd), argv, envp) == -1)
 				perror("execve:");
 		}
 		else
@@ -152,6 +147,61 @@ void	my_exec(t_parse *parse, char **av, char **envp, char *line)
 	}
 	close(pipe_fd1[0]);
 	wait(&status);
+	 */
+	while (parse)
+	{
+		if (parse->cmd && !parse->pipe)
+		{
+			if ((pid = fork()) == -1)
+				perror("fork");
+			else if (pid == 0)
+			{
+				if (execve(check_path_access(alst,parse->cmd ), argv, envp) == -1)
+					perror("execve");
+			}
+			//else
+			//	wait(&status);
+		}
+		parse = parse->next;
+	}
+	wait(&status);
+}
+
+int back_slash(char *str)
+{
+	if (str[ft_strlen(str)] == '/')
+			return 1;
+	return 0;
+}
+
+char *check_path_access(t_list *alst, char *cmd)
+{
+	char **tab_path;
+	char *path;
+
+	while (alst != NULL)
+	{
+		if (!strcmp(alst->key, "PATH"))
+		{
+			tab_path = ft_split(alst->content, ':');
+			break;
+		}
+		alst = alst->next;
+	}
+	int i = -1;
+	while (tab_path[++i])
+	{
+		if (!back_slash(tab_path[i]))
+		{
+			path = ft_strjoin(tab_path[i], "/");
+			path = ft_strjoin(path, cmd);
+		}
+		else
+			path = ft_strjoin(tab_path[i], cmd);
+		if (!access(path, X_OK | R_OK))
+				return (path);
+	}
+	return (NULL);
 }
 
 int main(int ac, char **av, char **envp)
@@ -173,13 +223,14 @@ int main(int ac, char **av, char **envp)
 		parse = malloc(sizeof(t_parse));
 		init_parse(parse);
 		parse = parser_arg(parse, line);
-		my_exec(parse, av, envp, line);
+		my_exec(parse, envp, alst);
 		print_arg(parse);
 		free(parse);
 		/*if (execve(ft_strjoin("/bin/", av[0]), av, envp) == -1)
 		{
 			perror("ne peux pas executer execve\n");
 		}
+		
 		if (!ft_strncmp(line, "pwd", 3))
 				get_path();
 		if (!ft_strncmp(line, "cd", 2))

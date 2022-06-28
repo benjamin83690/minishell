@@ -55,6 +55,7 @@ char	*sub_arg(char *line , int i);
 char	*cut_arg(t_parse *parse, char *line, int i);
 char	*sub_path_direction(char *cmd, int i);
 char	*cut_arg(t_parse *parse, char *line, int i);
+char 	*check_path_access(t_list *alst, char *cmd);
 
 void	free_tab(char **tab);
 void	insert_env(char **envp, t_list **alst);
@@ -62,9 +63,10 @@ void	print_list(t_list **alst);
 void	init_parse(t_parse *parse);
 void	add_back(t_parse **parse, t_parse *new);
 void	get_path(void);
+void change_dir(char *path, t_list *alst);
 void	print_arg(t_parse *parse);
 void	update_env(t_list *alst, char *path);
-void	my_exec(t_parse *parse, char **av, char **envp, char *line);
+void	my_exec(t_parse *parse, char **envp, t_list *alst);
 
 t_parse	*parser_arg(t_parse *parse, char *line);
 t_parse	*insert_arg(t_parse *parse, char *cmd);

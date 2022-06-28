@@ -56,9 +56,9 @@ void	insert_env(char **envp, t_list **alst)
     {
         tab = ft_split(envp[i], '=');
         new = ft_lstnew(tab[1], tab[0]);
-        if (alst == NULL)
+       /* if (*alst == NULL)
                 *alst = new;
-        else
+        else*/
                 ft_lstadd_back(alst, new);
         free(tab);
     }

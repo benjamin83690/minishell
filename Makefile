@@ -1,5 +1,5 @@
 CC		=	gcc
-CFLAGS	=	-Wall -Wextra -Werror 
+CFLAGS	=	-Wall -Wextra 
 HEADER	=	include
 SRCS	= 	srcs/minishell.c \
 			srcs/arg.c \

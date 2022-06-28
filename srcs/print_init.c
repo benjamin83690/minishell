@@ -31,7 +31,7 @@ void	print_arg(t_parse *parse)
                 printf("command%d-> redirection:[%d] ===>%s\n", i, j, elem->dir[j]);
             j = -1;
         }
-        printf("nbr_arg = %d\n", elem->nbr_arg);
+       // printf("nbr_arg = %d\n", elem->nbr_arg);
         if (elem->pipe)
             printf("pipe[%d] existant = [%d]\n",i, elem->pipe );
         i++;
